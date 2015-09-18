@@ -62,6 +62,9 @@ export default class HcView extends CustomElement {
 		if(component === this.component && JSON.stringify(args) === JSON.stringify(this.args))
 			return void 0;
 			
+		if(typeof this.pending === 'undefined')
+			this.pending = this.createElement(component, args);
+			
 		this.clearShadow();
 		this.shadowRoot.appendChild(this.pending);
 		this.pending = void 0;
