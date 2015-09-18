@@ -21,7 +21,7 @@ export default class Route {
 		
 		return <{[name:string]:string}>this.params
 		.reduce((prev, curr, index) => {
-			prev[index] = values[index]
+			prev[curr] = values[index]
 			return prev;
 		}, {});
 		

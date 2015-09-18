@@ -1,5 +1,6 @@
 import {Component, CustomElement} from 'horcrux-core';
 import Router from './router/router'
+import {bindDom} from 'horcrux-core'
 
 @Component
 export default class HcView extends CustomElement {
@@ -82,7 +83,11 @@ export default class HcView extends CustomElement {
 		html += '></' + component + '>'
 		
 		this.div.innerHTML = html;
-		return <CustomElement>this.div.children[0]
+		let element = <CustomElement>this.div.children[0]
+		
+		bindDom(element, [args]);
+		
+		return element;
 	}
 	
 	protected clearShadow(): void {
