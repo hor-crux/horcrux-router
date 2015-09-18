@@ -1,4 +1,5 @@
-import {Store, handle} from 'horcrux-flux';
+import {Store, handle} from 'horcrux-flux'
+import {IRouteConfig} from './routeconfig'
 import RouteStatic from './routestatic'
 import Route from './route';
 import RouteActions from './actions'
@@ -43,7 +44,7 @@ export default class Router extends Store<Route> {
 			
 		return Promise.all(
 			this.views.map(view => {
-				return view.canDeavtivate(route.component[view.name], route.getArgs(url))
+				return view.canDeavtivate((<any>route.component[view.name]).selector, route.getArgs(url))
 			})
 		);
 	}
@@ -58,7 +59,7 @@ export default class Router extends Store<Route> {
 			
 		return Promise.all(
 			this.views.map(view => {
-				return view.canAvtivate(route.component[view.name], route.getArgs(url));
+				return view.canAvtivate((<any>route.component[view.name]).selector, route.getArgs(url));
 			})
 		);
 	}
@@ -72,7 +73,7 @@ export default class Router extends Store<Route> {
 			return void 0;
 			
 		this.views.map(view => {
-			return view.activate(route.component[view.name], route.getArgs(url));
+			return view.activate((<any>route.component[view.name]).selector, route.getArgs(url));
 		})
 	}
 	

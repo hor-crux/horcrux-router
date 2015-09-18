@@ -1,4 +1,6 @@
-interface IRouteConfig {
+import { CustomElement } from 'horcrux-core';
+
+export interface IRouteConfig {
 	url:string
-	component: string | {[name:string]:string}
+	component: typeof CustomElement | {[name:string]:typeof CustomElement}
 }

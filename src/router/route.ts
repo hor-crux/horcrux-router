@@ -1,7 +1,10 @@
+import {CustomElement} from 'horcrux-core'
+import {IRouteConfig} from './routeconfig'
+ 
 export default class Route {
 	
 	public url:string;
-	public component:{[name:string]:string};
+	public component:{[name:string]:typeof CustomElement};
 	private regex: RegExp;
 	private params:Array<string> = [];
 	
