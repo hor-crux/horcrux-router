@@ -22,7 +22,7 @@ export default class Router extends Store<Route> {
 	
 	public addView(view:HcView): void {
 		this.views.push(view);
-		Router._static.route(window.location.hash.substring(1), this, view.name)
+		Router._static.route(window.location.hash.substring(1), false, this, view.name)
 	}
 	
 	public removeView(view:HcView): void {
