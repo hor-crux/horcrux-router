@@ -41,7 +41,6 @@ class HcView extends CustomElement {
     private args;
     private current;
     private pending;
-    private div;
     private router;
     name: any;
     createdCallback(): void;

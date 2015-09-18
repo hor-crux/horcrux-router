@@ -9,7 +9,6 @@ export default class HcView extends CustomElement {
 	private args:any;
 	private current: CustomElement;
 	private pending: CustomElement;
-	private div = document.createElement('div');
 	private router: Router;
 	
 	public name;
@@ -77,17 +76,8 @@ export default class HcView extends CustomElement {
 	
 	
 	protected createElement(component:string, args:any): CustomElement {
-		let html = '<' + component + ' ';
-		/*
-		for(let key in args)
-			html += '#' + key + '="{{' + args[key] + '}}"' + ' '
-		*/
-		html += '></' + component + '>'
+		let element = <CustomElement>document.createElement(component);
 		
-		this.div.innerHTML = html;
-		let element = <CustomElement>this.div.children[0]
-		
-		//bindDom(element, [args]);
 		for(let key in args)
 			element[key] = args[key];
 		
