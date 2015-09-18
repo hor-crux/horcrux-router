@@ -1,7 +1,9 @@
 import Router from './router'
 
 export default class RouteStatic {
+	
 	private routers: Array<Router> = [];
+	private history: Array<string> = [];
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
@@ -16,13 +18,13 @@ export default class RouteStatic {
 		this.routers.splice(this.routers.indexOf(router), 1);
 	}
 	
-	public route(url:string, router?:Router, viewName?:string): Promise<any> {
+	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		return Promise.resolve('')
 		.then(_=>{
 			return this.beforeRoute(url, router, viewName)
 		},
 		url=>{
-			this.route(url, router, viewName);
+			this.route(url, extern, router, viewName);
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
@@ -37,7 +39,8 @@ export default class RouteStatic {
 			this.setUrl(url);
 		})
 		.catch(url=> {
-			//Route not succesful
+			if(!!extern)
+				this.goBack();
 		})
 	}
 	
@@ -72,12 +75,18 @@ export default class RouteStatic {
 	}
 	
 	private onHashchange(event:HashChangeEvent): void {
-		this.route(window.location.hash.substring(1));
+		this.route(window.location.hash.substring(1), true);
 	}
 	
 	private setUrl(url:string): void {
 		window.onhashchange = void 0;
 		window.location.hash = url;
 		window.onhashchange = this.onHashchange.bind(this);
+		
+		this.history.push(url);
+	}
+	
+	private goBack(): void {
+		this.setUrl(this.history.pop() || '')
 	}
 }

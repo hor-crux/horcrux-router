@@ -17,7 +17,7 @@ export default class RouteActions {
 			data: url
 		});
 		
-		Router._static.route(url)
+		Router._static.route(url, false)
 		.then(_ => {
 			this.dispatcher.dispatch({
 				type: RouteActions.CHANGE_ROUTE_COMPLETE,

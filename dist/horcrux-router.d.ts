@@ -9,16 +9,18 @@ interface IRouteConfig {
 }
 class RouteStatic {
     private routers;
+    private history;
     constructor();
     addRouter(router: Router): void;
     removeRouter(router: Router): void;
-    route(url: string, router?: Router, viewName?: string): Promise<any>;
+    route(url: string, extern: boolean, router?: Router, viewName?: string): Promise<any>;
     beforeRoute(url: string, router?: Router, viewName?: string): Promise<any>;
     canDeactivate(url: string, router?: Router, viewName?: string): Promise<any>;
     canActivate(url: string, router?: Router, viewName?: string): Promise<any>;
     activate(url: string, router?: Router, viewName?: string): void;
     private onHashchange(event);
     private setUrl(url);
+    private goBack();
 }
 class Route {
     url: string;
