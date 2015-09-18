@@ -10,7 +10,7 @@ export default class Route {
 	
 	constructor(route: IRouteConfig) {
 		this.url = route.url;
-		this.component = typeof route.component === 'string' ? {default: route.component} : <any>route.component;
+		this.component = typeof route.component === 'function' ? {default: route.component} : <any>route.component;
 		this.regex = new RegExp('^\/?' + this.url.replace(/:\w+/g, '(.+)').replace(/\*/g, '.*') + '$')
 		this.params = (this.url.match(/:\w+/g) || []).map(param => {return param.substring(1)});
 	}
