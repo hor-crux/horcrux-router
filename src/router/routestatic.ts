@@ -20,6 +20,9 @@ export default class RouteStatic {
 		return Promise.resolve('')
 		.then(_=>{
 			return this.beforeRoute(url, router, viewName)
+		},
+		url=>{
+			this.route(url, router, viewName);
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
@@ -34,7 +37,7 @@ export default class RouteStatic {
 			this.setUrl(url);
 		})
 		.catch(url=> {
-			this.route(url, router, viewName);
+			//Route not succesful
 		})
 	}
 	
