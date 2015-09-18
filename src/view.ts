@@ -21,13 +21,16 @@ export default class HcView extends CustomElement {
 	attachedCallback() {
 		let parent:any = this.parentNode;
 		while(!parent.shadowRoot)
-			parent = parent.parentElement;
+			parent = parent.host || parent.parentNode;
 		
 		for(let key in parent) {
-			if(parent[key] instanceof Router)
+			if(parent[key] instanceof Router) {
 				this.router = parent[key];
+				break;
+			}
 		}	
-		
+		if(!this.router)
+			throw 'HcView should be child of an Component that has a Router!'
 		this.router.addView(this);
 	}
 	
