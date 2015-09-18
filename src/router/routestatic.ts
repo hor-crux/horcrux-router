@@ -16,55 +16,55 @@ export default class RouteStatic {
 		this.routers.splice(this.routers.indexOf(router), 1);
 	}
 	
-	public route(url:string, router?:Router): void {
-		Promise.resolve('')
+	public route(url:string, router?:Router, viewName?:string): Promise<any> {
+		return Promise.resolve('')
 		.then(_=>{
-			return this.beforeRoute(url, router)
+			return this.beforeRoute(url, router, viewName)
 		})
 		.then(_=>{
-			return this.canDeactivate(url, router)
+			return this.canDeactivate(url, router, viewName)
 		})
 		.then(_=> {
-			return this.canActivate(url, router);
+			return this.canActivate(url, router, viewName);
 		})
 		.then(_=>{
-			return this.activate(url, router);
+			return this.activate(url, router, viewName);
 		})
 		.then(_=>{
 			this.setUrl(url);
 		})
 		.catch(url=> {
-			this.route(url, router);
+			this.route(url, router, viewName);
 		})
 	}
 	
-	public beforeRoute(url:string, router?:Router): Promise<any> {
+	public beforeRoute(url:string, router?:Router, viewName?:string): Promise<any> {
 		if(!!router)
 			return router.beforeRoute(url);
 		else
 			return Promise.all(this.routers.map(router => {return router.beforeRoute(url)}))
 	}
 	
-	public canDeactivate(url:string, router?:Router): Promise<any> {
+	public canDeactivate(url:string, router?:Router, viewName?:string): Promise<any> {
 		if(!!router)
-			return router.canDeactivate(url);
+			return router.canDeactivate(url, viewName);
 		else
-		return Promise.all(this.routers.map(router => {return router.canDeactivate(url)}))
+		return Promise.all(this.routers.map(router => {return router.canDeactivate(url, viewName)}))
 	}
 	
-	public canActivate(url:string, router?:Router): Promise<any> {
+	public canActivate(url:string, router?:Router, viewName?:string): Promise<any> {
 		if(!!router)
-			return router.canActivate(url);
+			return router.canActivate(url, viewName);
 		else
-			return Promise.all(this.routers.map(router => {return router.canActivate(url)}))
+			return Promise.all(this.routers.map(router => {return router.canActivate(url, viewName)}))
 	}
 	
-	public activate(url:string, router?:Router): void {
+	public activate(url:string, router?:Router, viewName?:string): void {
 		if(!!router)
-			router.activate(url);
+			router.activate(url, viewName);
 		else 
 			this.routers.forEach(router => {
-				router.activate(url);
+				router.activate(url, viewName);
 			})
 	}
 	

@@ -9,9 +9,7 @@ export default class Router extends Store<Route> {
 	
 	// STATIC
 	static _static = new RouteStatic();
-	static route(url:string, router?:Router): void {
-		return Router._static.route(url, router);
-	}
+	
 	
 	//INSTANCE
 	protected routes: Array<Route> = [];
@@ -24,7 +22,7 @@ export default class Router extends Store<Route> {
 	
 	public addView(view:HcView): void {
 		this.views.push(view);
-		//Router.route(window.location.hash.substring(1), this)
+		Router._static.route(window.location.hash.substring(1), this, view.name)
 	}
 	
 	public removeView(view:HcView): void {
@@ -46,13 +44,17 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views and asks them to deactivate
 	 */
-	public canDeactivate(url:string): Promise<any> {
+	public canDeactivate(url:string, viewName?:string): Promise<any> {
 		let route = this.findRoute(url);
 		if(!route)
 			return Promise.resolve('')
 			
 		return Promise.all(
-			this.views.map(view => {
+			this.views
+			.filter(view => {
+				return !viewName || view.name === viewName;
+			})
+			.map(view => {
 				return view.canDeavtivate(route.getComponentSelector(view.name), route.getArgs(url))
 			})
 		);
@@ -61,14 +63,18 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views and asks them to activate
 	 */
-	public canActivate(url:string): Promise<any> {
+	public canActivate(url:string, viewName?:string): Promise<any> {
 		let route = this.findRoute(url);
 		if(!route)
 			return Promise.resolve('')
 			
 		return Promise.all(
-			this.views.map(view => {
-				return view.canAvtivate((<any>route.component[view.name]).selector, route.getArgs(url));
+			this.views
+			.filter(view => {
+				return !viewName || view.name === viewName;
+			})
+			.map(view => {
+				return view.canAvtivate(route.getComponentSelector(view.name), route.getArgs(url));
 			})
 		);
 	}
@@ -76,13 +82,17 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views activate the new component
 	 */
-	public activate(url:string): void {
+	public activate(url:string, viewName?:string): void {
 		let route = this.findRoute(url);
 		if(!route)
 			return void 0;
 			
-		this.views.map(view => {
-			return view.activate((<any>route.component[view.name]).selector, route.getArgs(url));
+		this.views
+		.filter(view => {
+			return !viewName || view.name === viewName;
+		})
+		.forEach(view => {
+			view.activate(route.getComponentSelector(view.name), route.getArgs(url));
 		})
 	}
 	

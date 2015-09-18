@@ -12,11 +12,11 @@ class RouteStatic {
     constructor();
     addRouter(router: Router): void;
     removeRouter(router: Router): void;
-    route(url: string, router?: Router): void;
-    beforeRoute(url: string, router?: Router): Promise<any>;
-    canDeactivate(url: string, router?: Router): Promise<any>;
-    canActivate(url: string, router?: Router): Promise<any>;
-    activate(url: string, router?: Router): void;
+    route(url: string, router?: Router, viewName?: string): Promise<any>;
+    beforeRoute(url: string, router?: Router, viewName?: string): Promise<any>;
+    canDeactivate(url: string, router?: Router, viewName?: string): Promise<any>;
+    canActivate(url: string, router?: Router, viewName?: string): Promise<any>;
+    activate(url: string, router?: Router, viewName?: string): void;
     private onHashchange(event);
     private setUrl(url);
 }
@@ -38,7 +38,8 @@ class Route {
 class RouteActions {
     private dispatcher;
     static CHANGE_ROUTE_START: string;
-    changeRoute(url: string): void;
+    static CHANGE_ROUTE_COMPLETE: string;
+    route(url: string): void;
 }
 class HcView extends CustomElement {
     private component;
@@ -59,7 +60,6 @@ class HcView extends CustomElement {
 }
 class Router extends Store<Route> {
     static _static: RouteStatic;
-    static route(url: string, router?: Router): void;
     protected routes: Array<Route>;
     protected views: Array<HcView>;
     constructor();
@@ -70,15 +70,15 @@ class Router extends Store<Route> {
     /**
      * iterates over all registered views and asks them to deactivate
      */
-    canDeactivate(url: string): Promise<any>;
+    canDeactivate(url: string, viewName?: string): Promise<any>;
     /**
      * iterates over all registered views and asks them to activate
      */
-    canActivate(url: string): Promise<any>;
+    canActivate(url: string, viewName?: string): Promise<any>;
     /**
      * iterates over all registered views activate the new component
      */
-    activate(url: string): void;
+    activate(url: string, viewName?: string): void;
     protected findRoute(url: string): Route;
 }
 }
