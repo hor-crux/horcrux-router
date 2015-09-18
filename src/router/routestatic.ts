@@ -16,36 +16,56 @@ export default class RouteStatic {
 		this.routers.splice(this.routers.indexOf(router), 1);
 	}
 	
-	public route(url:string): void {
+	public route(url:string, router?:Router): void {
 		Promise.resolve('')
 		.then(_=>{
-			return this.canDeactivate(url)
-		})
-		.then(_=> {
-			return this.canActivate(url);
+			return this.beforeRoute(url, router)
 		})
 		.then(_=>{
-			return this.activate(url);
+			return this.canDeactivate(url, router)
+		})
+		.then(_=> {
+			return this.canActivate(url, router);
+		})
+		.then(_=>{
+			return this.activate(url, router);
 		})
 		.then(_=>{
 			this.setUrl(url);
 		})
+		.catch(url=> {
+			this.route(url, router);
+		})
 	}
 	
-	public canDeactivate(url:string): Promise<any> {
-		// iterate over all registered router and ask them if they can deactivate
+	public beforeRoute(url:string, router?:Router): Promise<any> {
+		if(!!router)
+			return router.beforeRoute(url);
+		else
+			return Promise.all(this.routers.map(router => {return router.beforeRoute(url)}))
+	}
+	
+	public canDeactivate(url:string, router?:Router): Promise<any> {
+		if(!!router)
+			return router.canDeactivate(url);
+		else
 		return Promise.all(this.routers.map(router => {return router.canDeactivate(url)}))
 	}
 	
-	public canActivate(url:string): Promise<any> {
-		// iterate over all registered router and ask them if they can activate
-		return Promise.all(this.routers.map(router => {return router.canActivate(url)}))
+	public canActivate(url:string, router?:Router): Promise<any> {
+		if(!!router)
+			return router.canActivate(url);
+		else
+			return Promise.all(this.routers.map(router => {return router.canActivate(url)}))
 	}
 	
-	public activate(url:string): void {
-		this.routers.forEach(router => {
+	public activate(url:string, router?:Router): void {
+		if(!!router)
 			router.activate(url);
-		})
+		else 
+			this.routers.forEach(router => {
+				router.activate(url);
+			})
 	}
 	
 	private onHashchange(event:HashChangeEvent): void {

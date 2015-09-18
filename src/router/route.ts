@@ -5,12 +5,16 @@ export default class Route {
 	
 	public url:string;
 	public component:{[name:string]:typeof CustomElement};
+	public redirect:string
+	
 	private regex: RegExp;
 	private params:Array<string> = [];
 	
 	constructor(route: IRouteConfig) {
 		this.url = route.url;
 		this.component = typeof route.component === 'function' ? {default: route.component} : <any>route.component;
+		this.redirect = route.redirect;
+		
 		this.regex = new RegExp('^\/?' + this.url.replace(/:\w+/g, '(.+)').replace(/\*/g, '.*') + '$')
 		this.params = (this.url.match(/:\w+/g) || []).map(param => {return param.substring(1)});
 	}
@@ -28,5 +32,10 @@ export default class Route {
 			return prev;
 		}, {});
 		
+	}
+	
+	public getComponentSelector(viewName:string): string {
+		let component = this.component[viewName]
+		return component && (<any>component).selector || void 0;
 	}
 }

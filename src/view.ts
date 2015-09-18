@@ -52,6 +52,8 @@ export default class HcView extends CustomElement {
 	public canAvtivate(component:string, args:any): Promise<any> {
 		if(component === this.component && JSON.stringify(args) === JSON.stringify(this.args))
 			return Promise.resolve('canActivate because requested component and args are same as current');
+		else if(!component)
+			return Promise.resolve('');
 		else {
 			this.pending = this.createElement(component, args);
 			return this.pending.canActivate();		
@@ -61,17 +63,11 @@ export default class HcView extends CustomElement {
 	public activate(component:string, args:any): void {
 		if(component === this.component && JSON.stringify(args) === JSON.stringify(this.args))
 			return void 0;
-			
+		
 		if(typeof this.pending === 'undefined')
 			this.pending = this.createElement(component, args);
 			
-		this.clearShadow();
-		this.shadowRoot.appendChild(this.pending);
-		this.pending = void 0;
-		
-		this.current = <CustomElement>(<HTMLElement>this.shadowRoot).children[0]
-		this.component = component;
-		this.args = JSON.parse(JSON.stringify(args));
+		this.updateElement(component, args);
 	}
 	
 	
@@ -82,6 +78,21 @@ export default class HcView extends CustomElement {
 			element[key] = args[key];
 		
 		return element;
+	}
+	
+	protected updateElement(component:string, args:any): void {
+		this.clearShadow();
+		if(!!this.pending) {
+			this.shadowRoot.appendChild(this.pending);
+			this.current = <CustomElement>(<HTMLElement>this.shadowRoot).children[0]
+		}
+		else {
+			this.current = void 0;
+		}
+		this.pending = void 0;
+		
+		this.component = component;
+		this.args = JSON.parse(JSON.stringify(args));
 	}
 	
 	protected clearShadow(): void {

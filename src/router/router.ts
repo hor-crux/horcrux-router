@@ -9,8 +9,8 @@ export default class Router extends Store<Route> {
 	
 	// STATIC
 	static _static = new RouteStatic();
-	static route(url:string): void {
-		return Router._static.route(url);
+	static route(url:string, router?:Router): void {
+		return Router._static.route(url, router);
 	}
 	
 	//INSTANCE
@@ -24,6 +24,7 @@ export default class Router extends Store<Route> {
 	
 	public addView(view:HcView): void {
 		this.views.push(view);
+		Router.route(window.location.hash.substring(1), this)
 	}
 	
 	public removeView(view:HcView): void {
@@ -32,6 +33,14 @@ export default class Router extends Store<Route> {
 	
 	public config(routeConfig:IRouteConfig): void {
 		this.routes.push(new Route(routeConfig));
+	}
+	
+	public beforeRoute(url:string): Promise<any> {
+		let route = this.findRoute(url);
+		if(!!route.redirect)
+			return Promise.reject(route.redirect)
+		else
+			return Promise.resolve('');
 	}
 	
 	/**
@@ -44,7 +53,7 @@ export default class Router extends Store<Route> {
 			
 		return Promise.all(
 			this.views.map(view => {
-				return view.canDeavtivate((<any>route.component[view.name]).selector, route.getArgs(url))
+				return view.canDeavtivate(route.getComponentSelector(view.name), route.getArgs(url))
 			})
 		);
 	}

@@ -2,19 +2,21 @@ declare module "horcrux-router" {
 export {	Router,	HcView,	RouteActions,	IRouteConfig}
 interface IRouteConfig {
     url: string;
-    component: typeof CustomElement | {
+    component?: typeof CustomElement | {
         [name: string]: typeof CustomElement;
     };
+    redirect?: string;
 }
 class RouteStatic {
     private routers;
     constructor();
     addRouter(router: Router): void;
     removeRouter(router: Router): void;
-    route(url: string): void;
-    canDeactivate(url: string): Promise<any>;
-    canActivate(url: string): Promise<any>;
-    activate(url: string): void;
+    route(url: string, router?: Router): void;
+    beforeRoute(url: string, router?: Router): Promise<any>;
+    canDeactivate(url: string, router?: Router): Promise<any>;
+    canActivate(url: string, router?: Router): Promise<any>;
+    activate(url: string, router?: Router): void;
     private onHashchange(event);
     private setUrl(url);
 }
@@ -23,6 +25,7 @@ class Route {
     component: {
         [name: string]: typeof CustomElement;
     };
+    redirect: string;
     private regex;
     private params;
     constructor(route: IRouteConfig);
@@ -30,6 +33,7 @@ class Route {
     getArgs(url: string): {
         [name: string]: string;
     };
+    getComponentSelector(viewName: string): string;
 }
 class RouteActions {
     private dispatcher;
@@ -50,17 +54,19 @@ class HcView extends CustomElement {
     canAvtivate(component: string, args: any): Promise<any>;
     activate(component: string, args: any): void;
     protected createElement(component: string, args: any): CustomElement;
+    protected updateElement(component: string, args: any): void;
     protected clearShadow(): void;
 }
 class Router extends Store<Route> {
     static _static: RouteStatic;
-    static route(url: string): void;
+    static route(url: string, router?: Router): void;
     protected routes: Array<Route>;
     protected views: Array<HcView>;
     constructor();
     addView(view: HcView): void;
     removeView(view: HcView): void;
     config(routeConfig: IRouteConfig): void;
+    beforeRoute(url: string): Promise<any>;
     /**
      * iterates over all registered views and asks them to deactivate
      */
