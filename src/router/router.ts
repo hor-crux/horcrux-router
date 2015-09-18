@@ -24,7 +24,7 @@ export default class Router extends Store<Route> {
 	
 	public addView(view:HcView): void {
 		this.views.push(view);
-		Router.route(window.location.hash.substring(1), this)
+		//Router.route(window.location.hash.substring(1), this)
 	}
 	
 	public removeView(view:HcView): void {
@@ -37,7 +37,7 @@ export default class Router extends Store<Route> {
 	
 	public beforeRoute(url:string): Promise<any> {
 		let route = this.findRoute(url);
-		if(!!route.redirect)
+		if(!!route && !!route.redirect)
 			return Promise.reject(route.redirect)
 		else
 			return Promise.resolve('');
