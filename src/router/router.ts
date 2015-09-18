@@ -38,6 +38,9 @@ export default class Router extends Store<Route> {
 	 */
 	public canDeactivate(url:string): Promise<any> {
 		let route = this.findRoute(url);
+		if(!route)
+			return Promise.resolve('')
+			
 		return Promise.all(
 			this.views.map(view => {
 				return view.canDeavtivate(route.component[view.name], route.getArgs(url))
@@ -50,6 +53,9 @@ export default class Router extends Store<Route> {
 	 */
 	public canActivate(url:string): Promise<any> {
 		let route = this.findRoute(url);
+		if(!route)
+			return Promise.resolve('')
+			
 		return Promise.all(
 			this.views.map(view => {
 				return view.canAvtivate(route.component[view.name], route.getArgs(url));
@@ -62,6 +68,9 @@ export default class Router extends Store<Route> {
 	 */
 	public activate(url:string): void {
 		let route = this.findRoute(url);
+		if(!route)
+			return void 0;
+			
 		this.views.map(view => {
 			return view.activate(route.component[view.name], route.getArgs(url));
 		})

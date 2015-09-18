@@ -5,6 +5,7 @@ export default class RouteStatic {
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
+		this.onHashchange(undefined);
 	}
 	
 	public addRouter(router:Router): void {

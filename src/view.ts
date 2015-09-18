@@ -15,10 +15,11 @@ export default class HcView extends CustomElement {
 	
 	createdCallback() {
 		this.name = this.getAttribute('name') || 'default';
+		this.createShadowRoot();
 	}
 	
 	attachedCallback() {
-		let parent:any = this;
+		let parent:any = this.parentNode;
 		while(!parent.shadowRoot)
 			parent = parent.parentElement;
 		
@@ -72,7 +73,7 @@ export default class HcView extends CustomElement {
 		let html = '<' + component + ' ';
 		for(let key in args)
 			html += '#' + key + '="{{' + args[key] + '}}"' + ' '
-		html = '></' + component + '>'
+		html += '></' + component + '>'
 		
 		this.div.innerHTML = html;
 		return <CustomElement>this.div.children[0]
