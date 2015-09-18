@@ -1,0 +1,32 @@
+{
+  "name": "horcrux-router",
+  "version": "0.0.0",
+  "main": "dist/horcrux-router.js",
+  "jspm": {
+    "registry": "github",
+    "directories": {
+      "lib": "dist"
+    },
+    "dependencies": {
+      "horcrux-core": "hor-crux/horcrux-core@master",
+      "horcrux-di": "hor-crux/horcrux-di@master",
+      "horcrux-flux": "hor-crux/horcrux-flux@master"
+    },
+    "devDependencies": {}
+  },
+  "devDependencies": {
+    "del": "^2.0.1",
+    "gulp": "^3.9.0",
+    "gulp-add-src": "^0.2.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-typescript": "^2.8.2",
+    "gulp-wrap": "^0.11.0",
+    "jspm": "^0.16.2",
+    "merge-stream": "^1.0.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.2",
+    "typescript": "^1.6.0-dev.20150909"
+  }
+}

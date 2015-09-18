@@ -1,0 +1,8 @@
+{
+	"version": "1.6.0-dev.20150907",
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "amd",
+		"experimentalDecorators": true
+	}
+}
