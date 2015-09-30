@@ -1,8 +1,8 @@
-import { CustomAttribute, Model } from 'horcrux-core';
+import { CustomAttribute, Attribute, Model } from 'horcrux-core';
 import { register, inject } from 'horcrux-di';
 import RouteActions from './router/actions'
 
-@register
+@Attribute
 export default class HcHref extends CustomAttribute {
 	
 	@inject(RouteActions)
