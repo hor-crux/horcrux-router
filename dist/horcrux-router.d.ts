@@ -1,5 +1,11 @@
 declare module "horcrux-router" {
-export {	Router,	HcView,	RouteActions,	IRouteConfig}
+export {
+	Router,
+	HcView,
+	RouteActions,
+	IRouteConfig,
+	HcHref
+}
 interface IRouteConfig {
     url: string;
     component?: typeof CustomElement | {
@@ -82,5 +88,9 @@ class Router extends Store<Route> {
      */
     activate(url: string, viewName?: string): void;
     protected findRoute(url: string): Route;
+}
+class HcHref extends CustomAttribute {
+    private routeActions;
+    constructor(node: Node, attr: Attr, model: Model, path: string);
 }
 }

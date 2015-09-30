@@ -1,13 +1,15 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import Router from "./router/router"
-import HcView from "./view"
 import RouteActions from './router/actions'
 import {IRouteConfig} from './router/routeconfig'
+import HcView from "./view"
+import HcHref from './href'
 
 export {
 	Router,
 	HcView,
 	RouteActions,
-	IRouteConfig
+	IRouteConfig,
+	HcHref
 }
