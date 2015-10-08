@@ -76,10 +76,12 @@ export default class RouteStatic {
 	}
 	
 	private onHashchange(event:HashChangeEvent): void {
-		if((event.newURL.match(/#(.*)/) || [])[1] === window.location.hash.substring(1))
+		let hash = window.location.hash.length === 0 ? '' : window.location.hash.substring(1);
+		
+		if(!!event && (event.newURL.match(/#(.*)/) || [])[1] === hash)
 			return;
 			
-		this.route(window.location.hash.substring(1), true);
+		this.route(hash, true);
 	}
 	
 	private setUrl(url:string): void {

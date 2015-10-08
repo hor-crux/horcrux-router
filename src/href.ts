@@ -11,8 +11,9 @@ export default class HcHref extends CustomAttribute {
 	constructor(node: Node, attr: Attr, model: Model, path: string) {
 		super(node, attr, model, path);
 		attr.ownerElement.removeAttribute(attr.name);
+		var url = attr.value[0] == '#' ? attr.value.substring(1) : attr.value;
 		(<any>node).onclick = e => {
-			this.routeActions.route(attr.value);
+			 this.routeActions.route(url);
 		}
 	}
 }
