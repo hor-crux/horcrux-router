@@ -72,6 +72,9 @@ export default class HcView extends CustomElement {
 	
 	
 	protected createElement(component:string, args:any): CustomElement {
+		if(!component)
+			return void 0;
+		
 		let element = <CustomElement>document.createElement(component);
 		
 		for(let key in args)
