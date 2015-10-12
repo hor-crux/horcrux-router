@@ -4,7 +4,7 @@ export default class RouteStatic {
 	
 	private routers: Array<Router> = [];
 	private history: Array<string> = [];
-	private routing: Promise<any>;
+	private routing: Promise<any> = Promise.resolve('');
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
@@ -22,12 +22,15 @@ export default class RouteStatic {
 	}
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
-		let end_routing: Function;
-		this.routing = new Promise((resolve, reject) => {
-			end_routing = resolve;
-		})
 		
-		return Promise.resolve('')
+		let end_routing: Function;
+		
+		return this.routing
+		.then(_=> {
+			this.routing = new Promise((resolve, reject) => {
+				end_routing = resolve;
+			})			
+		})
 		.then(_=>{
 			return this.beforeRoute(url, router, viewName)
 		})
