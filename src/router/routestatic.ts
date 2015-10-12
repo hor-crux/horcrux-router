@@ -4,7 +4,9 @@ export default class RouteStatic {
 	
 	private routers: Array<Router> = [];
 	private history: Array<string> = [];
+	
 	private routing: Promise<any> = Promise.resolve('');
+	private resolve_routing: Function;
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
@@ -12,7 +14,7 @@ export default class RouteStatic {
 	}
 	
 	public addRouter(router:Router): void {
-		(this.routing || Promise.resolve('')).then(_=>{
+		this.routing.then(_=>{
 			this.routers.push(router);
 		})
 	}
@@ -21,25 +23,31 @@ export default class RouteStatic {
 		this.routers.splice(this.routers.indexOf(router), 1);
 	}
 	
+	protected startRouting(): void {
+		this.routing = new Promise((resolve, reject) => {
+			this.resolve_routing = resolve;
+		})
+	}
+	
+	protected stopRouting(): void {
+		this.resolve_routing();
+	}
+	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		
-		let end_routing: Function;
+		this.startRouting();
 		
 		return this.routing
-		.then(_=> {
-			this.routing = new Promise((resolve, reject) => {
-				end_routing = resolve;
-			})			
-		})
 		.then(_=>{
-			return this.beforeRoute(url, router, viewName)
+			return this.beforeRoute(url, router, viewName) //may reject, if redirect.
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
 		}
 		,url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
-			end_routing();
+			this.stopRouting();
 			this.route(url, extern, router, viewName);
+			return Promise.reject("ABORT");
 		})
 		.then(_=> {
 			return this.canActivate(url, router, viewName);
@@ -49,13 +57,19 @@ export default class RouteStatic {
 		})
 		.then(_=>{
 			this.setUrl(url);
-			end_routing();
+			this.stopRouting();
 		})
-		.catch(url=> {
-			if(!!extern)
-				this.goBack();
-			end_routing();
-		})
+		.catch(reason=> {
+			if(reason==="ABORT") {
+				this.stopRouting();
+				return;
+			}
+			else {
+				if(!!extern)
+					this.goBack();
+				this.stopRouting();
+			}
+		});
 	}
 	
 	public beforeRoute(url:string, router?:Router, viewName?:string): Promise<any> {
