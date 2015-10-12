@@ -110,9 +110,7 @@ export default class RouteStatic {
 		if(!!event) {
 			if((event.newURL.match(/#(.*)/) || [])[1] === hash)
 				return;
-			else
-				hash = (event.newURL.match(/#(.*)/) || [])[1] || '';
-		}  
+		}
 			
 		this.route(hash, true);
 	}
@@ -120,9 +118,9 @@ export default class RouteStatic {
 	private setUrl(url:string): void {
 		window.onhashchange = void 0;
 		window.location.hash = url;
+		this.history.push(url);
 		window.onhashchange = this.onHashchange.bind(this);
 		
-		this.history.push(url);
 	}
 	
 	private goBack(): void {
