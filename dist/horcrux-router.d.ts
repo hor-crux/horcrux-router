@@ -18,6 +18,7 @@ class RouteStatic {
     protected startRouting(): void;
     protected stopRouting(): void;
     route(url: string, extern: boolean, router?: Router, viewName?: string): Promise<any>;
+    protected redirect(url: string, extern: boolean, router?: Router, viewName?: string): Promise<any>;
     beforeRoute(url: string, router?: Router, viewName?: string): Promise<any>;
     canDeactivate(url: string, router?: Router, viewName?: string): Promise<any>;
     canActivate(url: string, router?: Router, viewName?: string): Promise<any>;

@@ -35,19 +35,17 @@ export default class RouteStatic {
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		
-		this.startRouting();
 		
 		return this.routing
 		.then(_=>{
+			this.startRouting();
 			return this.beforeRoute(url, router, viewName) //may reject, if redirect.
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
 		}
 		,url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
-			this.stopRouting();
-			this.route(url, extern, router, viewName);
-			return Promise.reject("ABORT");
+			 return this.redirect(url, extern, router, viewName);
 		})
 		.then(_=> {
 			return this.canActivate(url, router, viewName);
@@ -59,10 +57,9 @@ export default class RouteStatic {
 			this.setUrl(url);
 			this.stopRouting();
 		})
-		.catch(reason=> {
-			if(reason==="ABORT") {
-				this.stopRouting();
-				return;
+		.catch(url=> {
+			if(!!url) {
+				return this.redirect(url, extern, router, viewName);
 			}
 			else {
 				if(!!extern)
@@ -70,6 +67,11 @@ export default class RouteStatic {
 				this.stopRouting();
 			}
 		});
+	}
+	
+	protected redirect(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
+		this.stopRouting();
+		return this.route(url, extern, router, viewName);
 	}
 	
 	public beforeRoute(url:string, router?:Router, viewName?:string): Promise<any> {
