@@ -107,8 +107,12 @@ export default class RouteStatic {
 	private onHashchange(event:HashChangeEvent): void {
 		let hash = window.location.hash.length === 0 ? '' : window.location.hash.substring(1);
 		
-		if(!!event && (event.newURL.match(/#(.*)/) || [])[1] === hash)
-			return;
+		if(!!event) {
+			if((event.newURL.match(/#(.*)/) || [])[1] === hash)
+				return;
+			else
+				hash = (event.newURL.match(/#(.*)/) || [])[1] || '';
+		}  
 			
 		this.route(hash, true);
 	}

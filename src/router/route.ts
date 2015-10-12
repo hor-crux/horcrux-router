@@ -35,7 +35,7 @@ export default class Route {
 	}
 	
 	public getComponentSelector(viewName:string): string {
-		let component = this.component[viewName]
+		let component = this.component && this.component[viewName];
 		return component && (<any>component).selector || void 0;
 	}
 }

@@ -42,7 +42,7 @@ export default class HcView extends CustomElement {
 		if(component === this.component && JSON.stringify(args) === JSON.stringify(this.args))
 			return Promise.resolve('canDeactivate because requested component and args are same as current');
 		
-		if(!!this.current) {
+		else if(!!this.current) {
 			return this.current.canDeactivate();
 		}
 		else
