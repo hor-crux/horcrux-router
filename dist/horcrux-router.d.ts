@@ -10,6 +10,7 @@ interface IRouteConfig {
 class RouteStatic {
     private routers;
     private history;
+    private routing;
     constructor();
     addRouter(router: Router): void;
     removeRouter(router: Router): void;

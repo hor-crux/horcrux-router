@@ -4,6 +4,7 @@ export default class RouteStatic {
 	
 	private routers: Array<Router> = [];
 	private history: Array<string> = [];
+	private routing: Promise<any>;
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
@@ -11,7 +12,9 @@ export default class RouteStatic {
 	}
 	
 	public addRouter(router:Router): void {
-		this.routers.push(router);
+		(this.routing || Promise.resolve('')).then(_=>{
+			this.routers.push(router);
+		})
 	}
 	
 	public removeRouter(router:Router): void {
@@ -19,17 +22,22 @@ export default class RouteStatic {
 	}
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
+		let end_routing: Function;
+		this.routing = new Promise((resolve, reject) => {
+			end_routing = resolve;
+		})
+		
 		return Promise.resolve('')
 		.then(_=>{
 			return this.beforeRoute(url, router, viewName)
-		})		
+		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
-		},
-		url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
+		})
+		.catch(url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
+			end_routing();
 			this.route(url, extern, router, viewName);
-		}
-		)
+		})
 		.then(_=> {
 			return this.canActivate(url, router, viewName);
 		})
@@ -37,12 +45,13 @@ export default class RouteStatic {
 			return this.activate(url, router, viewName);
 		})
 		.then(_=>{
-			//if(!router)
-				this.setUrl(url);
+			this.setUrl(url);
+			end_routing();
 		})
 		.catch(url=> {
 			if(!!extern)
 				this.goBack();
+			end_routing();
 		})
 	}
 	
