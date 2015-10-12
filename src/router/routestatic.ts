@@ -33,8 +33,8 @@ export default class RouteStatic {
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
-		})
-		.catch(url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
+		}
+		,url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
 			end_routing();
 			this.route(url, extern, router, viewName);
 		})
