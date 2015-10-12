@@ -37,7 +37,7 @@ export default class RouteStatic {
 			return this.activate(url, router, viewName);
 		})
 		.then(_=>{
-			if(!router)
+			//if(!router)
 				this.setUrl(url);
 		})
 		.catch(url=> {
