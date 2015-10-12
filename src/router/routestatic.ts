@@ -22,13 +22,14 @@ export default class RouteStatic {
 		return Promise.resolve('')
 		.then(_=>{
 			return this.beforeRoute(url, router, viewName)
-		},
-		url=>{
-			this.route(url, extern, router, viewName);
-		})
+		})		
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
-		})
+		},
+		url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
+			this.route(url, extern, router, viewName);
+		}
+		)
 		.then(_=> {
 			return this.canActivate(url, router, viewName);
 		})
