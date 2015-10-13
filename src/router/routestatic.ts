@@ -105,10 +105,13 @@ export default class RouteStatic {
 	private onHashchange(event:HashChangeEvent): void {
 		let hash = window.location.hash.length === 0 ? '' : window.location.hash.substring(1);
 		
+		//If called because of hachchangeevent, e.g. user changes the hash directly in the browser, window.location.hash alreday is the new, requested url.
+		/*
 		if(!!event) {
 			if((event.newURL.match(/#(.*)/) || [])[1] === hash)
 				return;
 		}
+		*/
 			
 		this.route(hash, true);
 	}
