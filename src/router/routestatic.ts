@@ -30,7 +30,7 @@ export default class RouteStatic {
 	}
 	
 	protected stopRouting(): void {
-		this.resolve_routing();
+		(this.resolve_routing || function(){}).call(this);
 	}
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
