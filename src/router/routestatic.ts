@@ -35,6 +35,10 @@ export default class RouteStatic {
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		
+		if(this.routers.length === 0) {
+			this.stopRouting();
+			return;
+		}
 		
 		return this.routing
 		.then(_=>{
@@ -43,10 +47,7 @@ export default class RouteStatic {
 		})
 		.then(_=>{
 			return this.canDeactivate(url, router, viewName)
-		}
-		,url=>{ //called with redirect url, if beforeRoute returns an rejected Promise
-			 return this.redirect(url, extern, router, viewName);
-		})
+		})		
 		.then(_=> {
 			return this.canActivate(url, router, viewName);
 		})
