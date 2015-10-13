@@ -35,7 +35,7 @@ export default class RouteStatic {
 	
 	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		
-		if(this.routers.length === 0) {
+		if(this.routers.length === 0 && !router && !viewName) {
 			this.stopRouting();
 			return;
 		}
