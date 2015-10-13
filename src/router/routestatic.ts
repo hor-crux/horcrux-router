@@ -71,7 +71,8 @@ export default class RouteStatic {
 	
 	protected redirect(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
 		this.stopRouting();
-		return this.route(url, extern, router, viewName);
+		//return this.route(url, extern, router, viewName);
+		return this.route(url, extern);
 	}
 	
 	public beforeRoute(url:string, router?:Router, viewName?:string): Promise<any> {
