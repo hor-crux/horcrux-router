@@ -2,8 +2,8 @@ declare module "horcrux-router" {
 export {	Router,	HcView,	RouteActions,	IRouteConfig,	HcHref}
 interface IRouteConfig {
     url: string;
-    component?: typeof CustomElement | {
-        [name: string]: typeof CustomElement;
+    component?: typeof CustomElement | string | {
+        [name: string]: typeof CustomElement | string;
     };
     redirect?: string;
 }
@@ -30,7 +30,7 @@ class RouteStatic {
 class Route {
     url: string;
     component: {
-        [name: string]: typeof CustomElement;
+        [name: string]: typeof CustomElement | string;
     };
     redirect: string;
     private regex;

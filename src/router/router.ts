@@ -33,6 +33,9 @@ export default class Router extends Store<Route> {
 		this.routes.push(new Route(routeConfig));
 	}
 	
+	/*
+	* finds a route and redirects if neccessary
+	*/
 	public beforeRoute(url:string): Promise<any> {
 		let route = this.findRoute(url);
 		if(!!route && !!route.redirect)
@@ -55,7 +58,11 @@ export default class Router extends Store<Route> {
 				return !viewName || view.name === viewName;
 			})
 			.map(view => {
-				return view.canDeavtivate(route.getComponentSelector(view.name), route.getArgs(url))
+				let newComponentSelector = route.getComponentSelector(view.name);
+				if(newComponentSelector === "*")
+					return Promise.resolve('');
+				else
+					return view.canDeavtivate(newComponentSelector, route.getArgs(url))
 			})
 		);
 	}
@@ -74,7 +81,11 @@ export default class Router extends Store<Route> {
 				return !viewName || view.name === viewName;
 			})
 			.map(view => {
-				return view.canAvtivate(route.getComponentSelector(view.name), route.getArgs(url));
+				let newComponentSelector = route.getComponentSelector(view.name);
+				if(newComponentSelector === "*")
+					return Promise.resolve('');
+				else
+					return view.canAvtivate(newComponentSelector, route.getArgs(url));
 			})
 		);
 	}
@@ -92,7 +103,9 @@ export default class Router extends Store<Route> {
 			return !viewName || view.name === viewName;
 		})
 		.forEach(view => {
-			view.activate(route.getComponentSelector(view.name), route.getArgs(url));
+			let newComponentSelector = route.getComponentSelector(view.name);
+			if(newComponentSelector !== "*")
+				view.activate(newComponentSelector, route.getArgs(url));
 		})
 	}
 	

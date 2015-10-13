@@ -58,13 +58,9 @@ export default class RouteStatic {
 			this.stopRouting();
 		})
 		.catch(url=> {
-			if(!!url) {
+			this.stopRouting();
+			if(typeof url === "string") {
 				return this.redirect(url, extern, router, viewName);
-			}
-			else {
-				if(!!extern)
-					this.goBack();
-				this.stopRouting();
 			}
 		});
 	}

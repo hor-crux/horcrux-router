@@ -4,7 +4,7 @@ import {IRouteConfig} from './routeconfig'
 export default class Route {
 	
 	public url:string;
-	public component:{[name:string]:typeof CustomElement};
+	public component:{[name:string]:typeof CustomElement | string};
 	public redirect:string
 	
 	private regex: RegExp;
@@ -36,6 +36,11 @@ export default class Route {
 	
 	public getComponentSelector(viewName:string): string {
 		let component = this.component && this.component[viewName];
-		return component && (<any>component).selector || void 0;
+		if(component === "*") {
+			return "*";
+		}
+		else {
+			return component && (<any>component).selector || void 0;
+		}
 	}
 }
