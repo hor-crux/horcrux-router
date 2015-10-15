@@ -81,7 +81,7 @@ export default class HcView extends CustomElement {
 		let element = <CustomElement>document.createElement(component);
 		
 		for(let key in args) {
-			if(!!element.properties && key in element.properties)
+			if(!!element.properties && typeof element.properties[key] !== "undefined")
 				element[key] = args[key];
 			else
 				element.setAttribute(key, args[key])
