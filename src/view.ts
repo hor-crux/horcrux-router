@@ -1,4 +1,4 @@
-import {Component, CustomElement} from 'horcrux-core';
+import {Component, CustomElement, Property} from 'horcrux-core';
 import Router from './router/router'
 //import {bindDom} from 'horcrux-core'
 
@@ -82,7 +82,8 @@ export default class HcView extends CustomElement {
 		
 		for(let key in args) {
 			if(!!element.properties && element.properties.indexOf(key) > -1)
-				element[key] = args[key];
+				(<any>Property).setProperty(element, key, args[key]);
+				//element[key] = args[key];
 			else
 				element.setAttribute(key, args[key])
 		}
