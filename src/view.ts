@@ -43,8 +43,9 @@ export default class HcView extends CustomElement {
 			return Promise.resolve('canDeactivate because requested component and args are same as current');
 		
 		else if(!!this.current) {
-			return this.current.canDeactivate();
+			return this.current.canDeactivate(component, args);
 		}
+		
 		else
 			return Promise.resolve('No Component to deactivate');
 	}
@@ -52,8 +53,10 @@ export default class HcView extends CustomElement {
 	public canAvtivate(component:string, args:any): Promise<any> {
 		if(component === this.component && JSON.stringify(args) === JSON.stringify(this.args))
 			return Promise.resolve('canActivate because requested component and args are same as current');
+		
 		else if(!component)
 			return Promise.resolve('');
+		
 		else {
 			this.pending = this.createElement(component, args);
 			return this.pending.canActivate();		
@@ -77,8 +80,12 @@ export default class HcView extends CustomElement {
 		
 		let element = <CustomElement>document.createElement(component);
 		
-		for(let key in args)
-			element[key] = args[key];
+		for(let key in args) {
+			if(!!element.properties && key in element.properties)
+				element[key] = args[key];
+			else
+				element.setAttribute(key, args[key])
+		}
 		
 		return element;
 	}

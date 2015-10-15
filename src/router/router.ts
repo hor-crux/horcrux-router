@@ -50,7 +50,7 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views and asks them to deactivate
 	 */
-	public canDeactivate(url:string, viewName?:string): Promise<any> {
+	public canDeactivate(url:string, viewName?:string, args?:any): Promise<any> {
 		let route = this.findRoute(url);
 		if(!route)
 			return Promise.resolve('')
@@ -58,14 +58,14 @@ export default class Router extends Store<Route> {
 		return Promise.all(
 			this.views
 			.filter(view => {
-				return !viewName || view.name === viewName;
+				return !viewName || (view.name === viewName);
 			})
 			.map(view => {
 				let newComponentSelector = route.getComponentSelector(view.name);
 				if(newComponentSelector === "*")
 					return Promise.resolve('');
 				else
-					return view.canDeavtivate(newComponentSelector, route.getArgs(url))
+					return view.canDeavtivate(newComponentSelector, route.getArgs(url, args))
 			})
 		);
 	}
@@ -73,7 +73,7 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views and asks them to activate
 	 */
-	public canActivate(url:string, viewName?:string): Promise<any> {
+	public canActivate(url:string, viewName?:string, args?:any): Promise<any> {
 		let route = this.findRoute(url);
 		if(!route)
 			return Promise.resolve('')
@@ -81,14 +81,14 @@ export default class Router extends Store<Route> {
 		return Promise.all(
 			this.views
 			.filter(view => {
-				return !viewName || view.name === viewName;
+				return !viewName || (view.name === viewName);
 			})
 			.map(view => {
 				let newComponentSelector = route.getComponentSelector(view.name);
 				if(newComponentSelector === "*")
 					return Promise.resolve('');
 				else
-					return view.canAvtivate(newComponentSelector, route.getArgs(url));
+					return view.canAvtivate(newComponentSelector, route.getArgs(url, args));
 			})
 		);
 	}
@@ -96,19 +96,19 @@ export default class Router extends Store<Route> {
 	/**
 	 * iterates over all registered views activate the new component
 	 */
-	public activate(url:string, viewName?:string): void {
+	public activate(url:string, viewName?:string, args?:any): void {
 		let route = this.findRoute(url);
 		if(!route)
 			return void 0;
 			
 		this.views
 		.filter(view => {
-			return !viewName || view.name === viewName;
+			return !viewName || (view.name === viewName);
 		})
 		.forEach(view => {
 			let newComponentSelector = route.getComponentSelector(view.name);
 			if(newComponentSelector !== "*")
-				view.activate(newComponentSelector, route.getArgs(url));
+				view.activate(newComponentSelector, route.getArgs(url, args));
 		})
 	}
 	

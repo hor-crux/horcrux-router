@@ -35,7 +35,7 @@ export default class RouteStatic {
 		(this.resolve_routing || function(){}).call(this);
 	}
 	
-	public route(url:string, extern:boolean, router?:Router, viewName?:string): Promise<any> {
+	public route(url:string, extern:boolean, router?:Router, viewName?:string, args?:any): Promise<any> {
 		
 		if(this.routers.length === 0 && !router && !viewName) {
 			this.stopRouting();
@@ -48,13 +48,13 @@ export default class RouteStatic {
 			return this.beforeRoute(url, router, viewName) //may reject, if redirect.
 		})
 		.then(_=>{
-			return this.canDeactivate(url, router, viewName)
+			return this.canDeactivate(url, router, viewName, args)
 		})		
 		.then(_=> {
-			return this.canActivate(url, router, viewName);
+			return this.canActivate(url, router, viewName, args);
 		})
 		.then(_=>{
-			return this.activate(url, router, viewName);
+			return this.activate(url, router, viewName, args);
 		})
 		.then(_=>{
 			this.setUrl(url);
@@ -81,26 +81,26 @@ export default class RouteStatic {
 			return Promise.all(this.routers.map(router => {return router.beforeRoute(url)}))
 	}
 	
-	public canDeactivate(url:string, router?:Router, viewName?:string): Promise<any> {
+	public canDeactivate(url:string, router?:Router, viewName?:string, args?:any): Promise<any> {
 		if(!!router)
-			return router.canDeactivate(url, viewName);
+			return router.canDeactivate(url, viewName, args);
 		else
-		return Promise.all(this.routers.map(router => {return router.canDeactivate(url, viewName)}))
+		return Promise.all(this.routers.map(router => {return router.canDeactivate(url, viewName, args)}))
 	}
 	
-	public canActivate(url:string, router?:Router, viewName?:string): Promise<any> {
+	public canActivate(url:string, router?:Router, viewName?:string, args?:any): Promise<any> {
 		if(!!router)
-			return router.canActivate(url, viewName);
+			return router.canActivate(url, viewName, args);
 		else
-			return Promise.all(this.routers.map(router => {return router.canActivate(url, viewName)}))
+			return Promise.all(this.routers.map(router => {return router.canActivate(url, viewName, args)}))
 	}
 	
-	public activate(url:string, router?:Router, viewName?:string): void {
+	public activate(url:string, router?:Router, viewName?:string, args?:any): void {
 		if(!!router)
-			router.activate(url, viewName);
+			router.activate(url, viewName, args);
 		else 
 			this.routers.forEach(router => {
-				router.activate(url, viewName);
+				router.activate(url, viewName, args);
 			})
 	}
 	

@@ -23,15 +23,20 @@ export default class Route {
 		return this.regex.test(url);
 	}
 	
-	public getArgs(url:string): {[name:string]:string} {
+	public getArgs(url:string, args={}): {[name:string]:any} {
 		let values = this.regex.exec(url).slice(1);
 		
-		return <{[name:string]:string}>this.params
+		let a = <{[name:string]:any}>this.params
 		.reduce((prev, curr, index) => {
 			prev[curr] = values[index]
 			return prev;
 		}, {});
 		
+		for(let key in args) {
+			a[key] = args[key];
+		}
+		
+		return a;
 	}
 	
 	public getComponentSelector(viewName:string): string {

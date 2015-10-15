@@ -18,12 +18,12 @@ class RouteStatic {
     removeRouter(router: Router): void;
     protected startRouting(): void;
     protected stopRouting(): void;
-    route(url: string, extern: boolean, router?: Router, viewName?: string): Promise<any>;
+    route(url: string, extern: boolean, router?: Router, viewName?: string, args?: any): Promise<any>;
     protected redirect(url: string, extern: boolean, router?: Router, viewName?: string): Promise<any>;
     beforeRoute(url: string, router?: Router, viewName?: string): Promise<any>;
-    canDeactivate(url: string, router?: Router, viewName?: string): Promise<any>;
-    canActivate(url: string, router?: Router, viewName?: string): Promise<any>;
-    activate(url: string, router?: Router, viewName?: string): void;
+    canDeactivate(url: string, router?: Router, viewName?: string, args?: any): Promise<any>;
+    canActivate(url: string, router?: Router, viewName?: string, args?: any): Promise<any>;
+    activate(url: string, router?: Router, viewName?: string, args?: any): void;
     private onHashchange(event);
     private setUrl(url);
     private goBack();
@@ -38,8 +38,8 @@ class Route {
     private params;
     constructor(route: IRouteConfig);
     matches(url: string): boolean;
-    getArgs(url: string): {
-        [name: string]: string;
+    getArgs(url: string, args?: {}): {
+        [name: string]: any;
     };
     getComponentSelector(viewName: string): string;
 }
@@ -47,7 +47,7 @@ class RouteActions {
     private dispatcher;
     static CHANGE_ROUTE_START: string;
     static CHANGE_ROUTE_COMPLETE: string;
-    route(url: string): void;
+    route(url: string, args?: any): void;
 }
 class HcView extends CustomElement {
     private component;
@@ -78,15 +78,15 @@ class Router extends Store<Route> {
     /**
      * iterates over all registered views and asks them to deactivate
      */
-    canDeactivate(url: string, viewName?: string): Promise<any>;
+    canDeactivate(url: string, viewName?: string, args?: any): Promise<any>;
     /**
      * iterates over all registered views and asks them to activate
      */
-    canActivate(url: string, viewName?: string): Promise<any>;
+    canActivate(url: string, viewName?: string, args?: any): Promise<any>;
     /**
      * iterates over all registered views activate the new component
      */
-    activate(url: string, viewName?: string): void;
+    activate(url: string, viewName?: string, args?: any): void;
     protected findRoute(url: string): Route;
 }
 class HcHref extends CustomAttribute {
