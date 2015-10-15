@@ -10,7 +10,8 @@ interface IRouteConfig {
 class RouteStatic {
     private routers;
     private history;
-    private routing;
+    private _routing;
+    routing: Promise<any>;
     private resolve_routing;
     constructor();
     addRouter(router: Router): void;
@@ -90,6 +91,6 @@ class Router extends Store<Route> {
 }
 class HcHref extends CustomAttribute {
     private routeActions;
-    constructor(node: Node, attr: Attr, model: Model, path: string);
+    constructor(node: Node, attr: Attr, model: Model);
 }
 }

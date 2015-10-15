@@ -5,13 +5,15 @@ export default class RouteStatic {
 	private routers: Array<Router> = [];
 	private history: Array<string> = [];
 	
-	private routing: Promise<any> = Promise.resolve('');
+	private _routing: Promise<any> = Promise.resolve('');
+	public get routing(): Promise<any> {return this._routing}
 	private resolve_routing: Function;
 	
 	constructor() {
 		window.onhashchange = this.onHashchange.bind(this);
 		this.onHashchange(undefined);
 	}
+	
 	
 	public addRouter(router:Router): void {
 		this.routing.then(_=>{
@@ -24,7 +26,7 @@ export default class RouteStatic {
 	}
 	
 	protected startRouting(): void {
-		this.routing = new Promise((resolve, reject) => {
+		this._routing = new Promise((resolve, reject) => {
 			this.resolve_routing = resolve;
 		})
 	}
@@ -104,15 +106,6 @@ export default class RouteStatic {
 	
 	private onHashchange(event:HashChangeEvent): void {
 		let hash = window.location.hash.length === 0 ? '' : window.location.hash.substring(1);
-		
-		//If called because of hachchangeevent, e.g. user changes the hash directly in the browser, window.location.hash alreday is the new, requested url.
-		/*
-		if(!!event) {
-			if((event.newURL.match(/#(.*)/) || [])[1] === hash)
-				return;
-		}
-		*/
-			
 		this.route(hash, true);
 	}
 	

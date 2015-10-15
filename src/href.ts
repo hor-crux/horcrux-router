@@ -8,8 +8,8 @@ export default class HcHref extends CustomAttribute {
 	@inject(RouteActions)
 	private routeActions: RouteActions;
 	
-	constructor(node: Node, attr: Attr, model: Model, path: string) {
-		super(node, attr, model, path);
+	constructor(node: Node, attr: Attr, model: Model) {
+		super(node, attr, model);
 		attr.ownerElement.removeAttribute(attr.name);
 		var url = attr.value[0] == '#' ? attr.value.substring(1) : attr.value;
 		(<any>node).onclick = e => {
