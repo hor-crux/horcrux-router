@@ -14,6 +14,7 @@ export default class Router extends Store<Route> {
 	//INSTANCE
 	protected routes: Array<Route> = [];
 	protected views: Array<HcView> = [];
+	protected _onRouteComplete: (url:string, args:any) => any = function(){};
 	
 	constructor() {
 		super();
@@ -35,6 +36,11 @@ export default class Router extends Store<Route> {
 	public config(routeConfig:IRouteConfig): void {
 		this.routes.push(new Route(routeConfig));
 	}
+	
+	public onRouteComplete(callback:(url:string, args:any)=>any, self?:any): void {
+		this._onRouteComplete = !!self ? callback.bind(self) : callback;
+	}
+	
 	
 	/*
 	* finds a route and redirects if neccessary
@@ -110,6 +116,8 @@ export default class Router extends Store<Route> {
 			if(newComponentSelector !== "*")
 				view.activate(newComponentSelector, route.getArgs(url, args));
 		})
+		
+		this._onRouteComplete(url, route.getArgs(url, args));
 	}
 	
 	protected findRoute(url:string): Route {

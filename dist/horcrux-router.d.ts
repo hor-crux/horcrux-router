@@ -70,10 +70,12 @@ class Router extends Store<Route> {
     static _static: RouteStatic;
     protected routes: Array<Route>;
     protected views: Array<HcView>;
+    protected _onRouteComplete: (url: string, args: any) => any;
     constructor();
     addView(view: HcView): void;
     removeView(view: HcView): void;
     config(routeConfig: IRouteConfig): void;
+    onRouteComplete(callback: (url: string, args: any) => any, self?: any): void;
     beforeRoute(url: string): Promise<any>;
     /**
      * iterates over all registered views and asks them to deactivate
