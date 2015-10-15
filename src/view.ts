@@ -59,7 +59,15 @@ export default class HcView extends CustomElement {
 		
 		else {
 			this.pending = this.createElement(component, args);
-			return this.pending.canActivate();		
+			
+			return this.pending.canActivate()
+			.then(_ => {
+				return Promise.resolve(_);
+			})
+			.catch(_ => {
+				this.pending = void 0;
+				return Promise.reject(_);
+			})
 		}
 	}
 	
